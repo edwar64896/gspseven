@@ -2,6 +2,7 @@
 #define GSP_SEVEN
 
 #include "Arduino.h"
+#include <avr/pgmspace.h>
 
 const static byte charTable [] PROGMEM  = {
     B01111110,B00110000,B01101101,B01111001,B00110011,B01011011,B01011111,B01110000,
@@ -22,6 +23,26 @@ const static byte charTable [] PROGMEM  = {
     B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000
 };
 
+const static byte fontB [] PROGMEM = {
+    B00000000,
+    B00000001,
+    B00000010,
+    B00000011,
+    B00000100,
+    B00000101,
+    B00000110,
+    B00000111,
+    B00001000,
+    B00001001,
+    B00001010,
+    B00001011,
+    B00001100,
+    B00001101,
+    B00001110,
+    B00001111
+
+};
+
 #define OP_NOOP   0
 #define OP_DIGIT0 1
 #define OP_DIGIT1 2
@@ -37,31 +58,66 @@ const static byte charTable [] PROGMEM  = {
 #define OP_SHUTDOWN    12
 #define OP_DISPLAYTEST 15
 
-class gspSeven
+
+// enumerate the MAX7219 registers
+// See MAX7219 Datasheet, Table 2, page 7
+enum {  MAX7219_REG_DECODE    = 0x09,  
+        MAX7219_REG_INTENSITY = 0x0A,
+        MAX7219_REG_SCANLIMIT = 0x0B,
+        MAX7219_REG_SHUTDOWN  = 0x0C,
+        MAX7219_REG_DISPTEST  = 0x0F };
+
+// enumerate the SHUTDOWN modes
+// See MAX7219 Datasheet, Table 3, page 7
+enum  { OFF = 0,  
+        ON  = 1 };
+
+const byte DP = 0b10000000;  
+const byte C  = 0b01001110;  
+const byte F  = 0b01000111;
+
+class gspSeven {
 
     public:
     
-        gspSeven(int data, int clock, int chipSelect);
+        gspSeven(int data, int clock, int chipSelect, int nDisplays=1);
         ~gspSeven(){};
 
-        void setScanLimit(int addr, int limit);
-        void setIntensity(int addr, int intensity);
+        //void setScanLimit(int addr, int limit);
+        //void setIntensity(int addr, int intensity);
         void clearDisplay(int addr);
         int  getDeviceCount();
-        void shutdown(int addr, bool b);
+        //void shutdown(int addr, bool b);
         void setDigit(int addr, int digit, byte value, boolean dp);
+        void setDigits(char*);
+
+        void resetDisplay()  ;
+        void displayNums(String dateString)  ;
+        //void displayTime(String timeString)  ;
+        void resetDisplay(int display)  ;
+        void displayNums(int display, String inStr)  ;
+        void clearAllDisplays()  ;
+        void resetAllDisplays()  ;
 
     protected:
 
     private:
-    
+
         int _clk;
         int _data;
         int _cs;
 
-        byte spidata[16];
+        int _nDisplays=1;
 
-        void spiTransfer(int addr, volatile byte opcode, volatile byte data);
+        //byte spidata[16];
+        //byte status[64];
+
+        //void spiTransfer(int addr, volatile byte opcode, volatile byte data);
+
+        void set_register(byte reg, byte value)  ;
+        void set_register(uint8_t display, byte reg, byte value)  ;
+
+        void sendRegistersToAll(byte reg, byte value) ; 
 };
 
 #endif
