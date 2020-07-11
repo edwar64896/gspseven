@@ -98,6 +98,7 @@ class gspSeven {
         void displayNums(int display, String inStr)  ;
         void clearAllDisplays()  ;
         void resetAllDisplays()  ;
+        void setAllIntensity(uint8_t intensity);
 
     protected:
 

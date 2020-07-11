@@ -70,6 +70,10 @@ void gspSeven::displayNums(int display, String inStr)
     set_register(display,MAX7219_REG_SHUTDOWN, ON);   // Turn on display
 }
 
+void gspSeven::setAllIntensity(uint8_t intensity){
+    sendRegistersToAll(MAX7219_REG_INTENSITY, intensity & 0x0F);  // turn off display   
+}
+
 void gspSeven::clearAllDisplays()  
 {
     sendRegistersToAll(MAX7219_REG_SHUTDOWN, OFF);  // turn off display
