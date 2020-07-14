@@ -40,24 +40,22 @@ const static byte fontB [] PROGMEM = {
     B00001101,
     B00001110,
     B00001111
-
 };
 
-#define OP_NOOP   0
-#define OP_DIGIT0 1
-#define OP_DIGIT1 2
-#define OP_DIGIT2 3
-#define OP_DIGIT3 4
-#define OP_DIGIT4 5
-#define OP_DIGIT5 6
-#define OP_DIGIT6 7
-#define OP_DIGIT7 8
-#define OP_DECODEMODE  9
-#define OP_INTENSITY   10
-#define OP_SCANLIMIT   11
-#define OP_SHUTDOWN    12
-#define OP_DISPLAYTEST 15
-
+#define OP_NOOP         0
+#define OP_DIGIT0       1
+#define OP_DIGIT1       2
+#define OP_DIGIT2       3
+#define OP_DIGIT3       4
+#define OP_DIGIT4       5
+#define OP_DIGIT5       6
+#define OP_DIGIT6       7
+#define OP_DIGIT7       8
+#define OP_DECODEMODE   9
+#define OP_INTENSITY    10
+#define OP_SCANLIMIT    11
+#define OP_SHUTDOWN     12
+#define OP_DISPLAYTEST  15
 
 // enumerate the MAX7219 registers
 // See MAX7219 Datasheet, Table 2, page 7
@@ -80,27 +78,20 @@ class gspSeven {
 
     public:
     
-        gspSeven(int data, int clock, int chipSelect, int nDisplays=1);
+        gspSeven(int data, int clock, int chipSelect);
         ~gspSeven(){};
 
-        //void setScanLimit(int addr, int limit);
-        //void setIntensity(int addr, int intensity);
-        void clearDisplay(int addr);
+        void clearDisplay();
         int  getDeviceCount();
-        //void shutdown(int addr, bool b);
-        void setDigit(int addr, int digit, byte value, boolean dp);
-        void setDigits(char*);
 
         void resetDisplay();
-        void displayNums(String dateString);
-        //void displayTime(String timeString)  ;
-        void resetDisplay(int display);
-        void displayNums(int display, String inStr);
-        void clearAllDisplays();
-        void resetAllDisplays();
-        void setAllIntensity(uint8_t intensity);
+        void displayDigit(uint8_t unit, String inStr)  ;
 
-        void testBounce(int display);
+        void displayNums(String inStr);
+        void displayAllNums(String inStr);
+        void displayRtcTime(String inStr);
+        void displayRtcDate(String inStr);
+        void setIntensity(uint8_t intensity);
 
     protected:
 
@@ -110,12 +101,7 @@ class gspSeven {
         int _data;
         int _cs;
 
-        int _nDisplays=1;
-
         void set_register(byte reg, byte value)  ;
-        void set_register(uint8_t display, byte reg, byte value)  ;
-
-        void sendRegistersToAll(byte reg, byte value) ; 
 };
 
 #endif
