@@ -91,14 +91,16 @@ class gspSeven {
         void setDigit(int addr, int digit, byte value, boolean dp);
         void setDigits(char*);
 
-        void resetDisplay()  ;
-        void displayNums(String dateString)  ;
+        void resetDisplay();
+        void displayNums(String dateString);
         //void displayTime(String timeString)  ;
-        void resetDisplay(int display)  ;
-        void displayNums(int display, String inStr)  ;
-        void clearAllDisplays()  ;
-        void resetAllDisplays()  ;
+        void resetDisplay(int display);
+        void displayNums(int display, String inStr);
+        void clearAllDisplays();
+        void resetAllDisplays();
         void setAllIntensity(uint8_t intensity);
+
+        void testBounce(int display);
 
     protected:
 
@@ -109,11 +111,6 @@ class gspSeven {
         int _cs;
 
         int _nDisplays=1;
-
-        //byte spidata[16];
-        //byte status[64];
-
-        //void spiTransfer(int addr, volatile byte opcode, volatile byte data);
 
         void set_register(byte reg, byte value)  ;
         void set_register(uint8_t display, byte reg, byte value)  ;
