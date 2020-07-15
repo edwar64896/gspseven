@@ -76,7 +76,7 @@ const byte C  = 0b01001110;
 const byte F  = 0b01000111;
 
 
-#define gspSeven_FLASHCOUNT 1048576
+#define gspSeven_FLASHCOUNT 64
 
 class gspSeven : public gspGrouped {
 
@@ -120,6 +120,7 @@ class gspSeven : public gspGrouped {
                 break;
                 default:
                     _flashDigit[digit-1]=state;
+                    Serial.println("setting flash for " + String(digit-1));
                 break;
             }
         }
@@ -146,9 +147,11 @@ class gspSeven : public gspGrouped {
         bool _flashState=false;
 
         byte _displayDigits[8]={0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F};
-        bool _updateDigits[8]={false,false,false,false,false,false,false,false};
+        bool _updateDigits[8]={true,true,true,true,true,true,true,true};
 
         void set_register(byte reg, byte value);
+
+        void render();
 };
 
 #endif

@@ -23,6 +23,7 @@ void gspSeven::resetDisplay()
 
 void gspSeven::displayNums(String inStr)  
 {
+    Serial.println(inStr);
     setDigitValue(   1,    0x0F);
     setDigitValue(   2,    inStr.charAt(6));
     setDigitValue(   3,    inStr.charAt(5));
@@ -93,13 +94,6 @@ _cs(chipSelect)
     set_register(OP_INTENSITY,0X02);
 }
 
-bool gspSeven::check() {
-    if (!(++_flashCount % gspSeven_FLASHCOUNT))
-        _flashState=!_flashState;
-    render();
-    return true; //keep going with other displays.
-}
-
 void gspSeven::render()  
 {
     set_register(   MAX7219_REG_SHUTDOWN,     OFF);  // turn off display
@@ -107,8 +101,8 @@ void gspSeven::render()
     set_register(   MAX7219_REG_DECODE,       0b11111111); // decode all digits
 
     for (int i=1;i<9;i++) {
-        if (_flashState) {
-            if (_flashDigit[i-1]) {
+        if (_flashDigit[i-1]) {
+            if (_flashState) {
                 set_register(   i,    _displayDigits[i-1]);
             } else {
                 set_register(   i,    0x0F);
@@ -120,7 +114,12 @@ void gspSeven::render()
             }
         }
     }
-    
     set_register(   MAX7219_REG_SHUTDOWN, ON);
+}
 
+bool gspSeven::check() {
+    if (!(++_flashCount % gspSeven_FLASHCOUNT))
+        _flashState=!_flashState;
+    render();
+    return true; //keep going with other displays.
 }
