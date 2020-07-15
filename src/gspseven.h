@@ -1,7 +1,8 @@
 #ifndef GSP_SEVEN
 #define GSP_SEVEN
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <gspgrouped.h>
 #include <avr/pgmspace.h>
 
 const static byte charTable [] PROGMEM  = {
@@ -74,7 +75,10 @@ const byte DP = 0b10000000;
 const byte C  = 0b01001110;  
 const byte F  = 0b01000111;
 
-class gspSeven {
+
+#define gspSeven_FLASHCOUNT 1048576
+
+class gspSeven : public gspGrouped {
 
     public:
     
@@ -93,7 +97,43 @@ class gspSeven {
         void displayRtcDate(String inStr);
         void setIntensity(uint8_t intensity);
 
-    protected:
+        void setDigitValue(uint8_t digit, byte value) {
+            _displayDigits[digit-1]=value;
+            _updateDigits[digit-1]=true;
+        }
+
+        static void checkAll() {
+            gspGrouped::checkAll(gspSeven::firstInstance);
+        }
+        
+        bool check();
+        void flashA(bool state=true){flash(1,state);flash(2,state);flash(3,state);flash(4,state);}
+        void flashB(bool state=true){flash(5,state);flash(6,state);flash(7,state);flash(8,state);}
+
+        // flashDigit() or (0) means flash all of them.
+        // flashDigit(1...8) means only flash that digit.
+        void flash(uint8_t digit=0,bool state=true){
+            switch(digit) {
+                case 0:
+                    flashA(state);
+                    flashB(state);
+                break;
+                default:
+                    _flashDigit[digit-1]=state;
+                break;
+            }
+        }
+
+        // means what it says on the tin.
+        void stopFlashing(){
+                _flashState = false;
+                flash(0,false);
+            }
+
+  protected:
+    void setFirstInstance(gspGrouped * fi) {gspSeven::firstInstance = fi;}
+    gspGrouped * getFirstInstance() {return gspSeven::firstInstance;}
+     static gspGrouped * firstInstance;
 
     private:
 
@@ -101,7 +141,14 @@ class gspSeven {
         int _data;
         int _cs;
 
-        void set_register(byte reg, byte value)  ;
+        uint32_t _flashCount=0;
+        bool _flashDigit[8]={false,false,false,false,false,false,false,false};
+        bool _flashState=false;
+
+        byte _displayDigits[8]={0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F};
+        bool _updateDigits[8]={false,false,false,false,false,false,false,false};
+
+        void set_register(byte reg, byte value);
 };
 
 #endif
