@@ -1,6 +1,6 @@
 {
-    "name": "gspswitch",
-    "keywords": "switch",
+    "name": "gspseven",
+    "keywords": "max7219 7-segment display",
     "description": "Arduino library for managing 7-segment displays based on MAX7219",
     "authors":
     {
