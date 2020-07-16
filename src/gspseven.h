@@ -88,6 +88,12 @@ class gspSeven : public gspGrouped {
         void clearDisplay();
         int  getDeviceCount();
 
+        static void startCheckAll() {
+            gspGrouped::_isr_checking = true;
+            gspGrouped::setInitialInstance(gspSeven::firstInstance);
+            gspGrouped::startTimer();
+        }    
+
         void resetDisplay();
         void displayDigit(uint8_t unit, String inStr)  ;
 
@@ -105,8 +111,10 @@ class gspSeven : public gspGrouped {
         static void checkAll() {
             gspGrouped::checkAll(gspSeven::firstInstance);
         }
-        
+
+
         bool check();
+        
         void flashA(bool state=true){flash(1,state);flash(2,state);flash(3,state);flash(4,state);}
         void flashB(bool state=true){flash(5,state);flash(6,state);flash(7,state);flash(8,state);}
 
@@ -129,12 +137,15 @@ class gspSeven : public gspGrouped {
         void stopFlashing(){
                 _flashState = false;
                 flash(0,false);
+                for (int i=0;i<8;i++) {
+                    _updateDigits[i]=true;
+                }
             }
 
   protected:
     void setFirstInstance(gspGrouped * fi) {gspSeven::firstInstance = fi;}
     gspGrouped * getFirstInstance() {return gspSeven::firstInstance;}
-     static gspGrouped * firstInstance;
+    static gspGrouped * firstInstance;
 
     private:
 
@@ -142,9 +153,9 @@ class gspSeven : public gspGrouped {
         int _data;
         int _cs;
 
-        uint32_t _flashCount=0;
+        //uint32_t _flashCount=0;
         bool _flashDigit[8]={false,false,false,false,false,false,false,false};
-        bool _flashState=false;
+
 
         byte _displayDigits[8]={0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F};
         bool _updateDigits[8]={true,true,true,true,true,true,true,true};

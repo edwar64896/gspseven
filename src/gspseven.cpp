@@ -1,7 +1,9 @@
 #include "gspseven.h"
 
 
+
 gspGrouped* gspSeven::firstInstance=nullptr;
+
 
 // ... write a value into a max7219 register 
 // See MAX7219 Datasheet, Table 1, page 6
@@ -92,7 +94,10 @@ _cs(chipSelect)
     set_register(OP_SHUTDOWN,OFF);
     set_register(OP_DISPLAYTEST,OFF);
     set_register(OP_INTENSITY,0X02);
+
+    gspGrouped::startTimer();
 }
+
 
 void gspSeven::render()  
 {
@@ -102,7 +107,7 @@ void gspSeven::render()
 
     for (int i=1;i<9;i++) {
         if (_flashDigit[i-1]) {
-            if (_flashState) {
+            if (gspGrouped::_flashState) {
                 set_register(   i,    _displayDigits[i-1]);
             } else {
                 set_register(   i,    0x0F);
@@ -114,12 +119,13 @@ void gspSeven::render()
             }
         }
     }
+
     set_register(   MAX7219_REG_SHUTDOWN, ON);
 }
 
 bool gspSeven::check() {
-    if (!(++_flashCount % gspSeven_FLASHCOUNT))
-        _flashState=!_flashState;
+    //Serial.println("rendering");
     render();
     return true; //keep going with other displays.
 }
+
