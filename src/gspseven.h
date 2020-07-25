@@ -82,17 +82,16 @@ class gspSeven : public gspGrouped {
 
     public:
     
+        /*
+         * main constructor:
+         * Params:
+         *  Data, Clock, CS
+         */ 
         gspSeven(int data, int clock, int chipSelect);
         ~gspSeven(){};
 
         void clearDisplay();
-        int  getDeviceCount();
-
-        static void startCheckAll() {
-            gspGrouped::_isr_checking = true;
-            gspGrouped::setInitialInstance(gspSeven::firstInstance);
-            gspGrouped::startTimer();
-        }    
+        int  getDeviceCount(); 
 
         void resetDisplay();
         void displayDigit(uint8_t unit, String inStr)  ;
@@ -113,6 +112,7 @@ class gspSeven : public gspGrouped {
         }
 
 
+
         bool check();
         
         void flashA(bool state=true){flash(1,state);flash(2,state);flash(3,state);flash(4,state);}
@@ -128,7 +128,6 @@ class gspSeven : public gspGrouped {
                 break;
                 default:
                     _flashDigit[digit-1]=state;
-                    Serial.println("setting flash for " + String(digit-1));
                 break;
             }
         }
@@ -142,10 +141,11 @@ class gspSeven : public gspGrouped {
                 }
             }
 
-  protected:
-    void setFirstInstance(gspGrouped * fi) {gspSeven::firstInstance = fi;}
-    gspGrouped * getFirstInstance() {return gspSeven::firstInstance;}
-    static gspGrouped * firstInstance;
+    protected:
+
+        void setFirstInstance(gspGrouped * fi) {gspSeven::firstInstance = fi;}
+        gspGrouped * getFirstInstance() {return gspSeven::firstInstance;}
+        static gspGrouped * firstInstance;
 
     private:
 

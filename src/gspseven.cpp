@@ -4,7 +4,6 @@
 
 gspGrouped* gspSeven::firstInstance=nullptr;
 
-
 // ... write a value into a max7219 register 
 // See MAX7219 Datasheet, Table 1, page 6
 void gspSeven::set_register(byte reg, byte value)  
@@ -123,8 +122,14 @@ void gspSeven::render()
     set_register(   MAX7219_REG_SHUTDOWN, ON);
 }
 
+bool fs=true;
+
 bool gspSeven::check() {
-    //Serial.println("rendering");
+
+    if (fs!=gspGrouped::_flashState) {
+        fs = gspGrouped::_flashState;
+    }
+    
     render();
     return true; //keep going with other displays.
 }
