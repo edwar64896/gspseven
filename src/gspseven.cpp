@@ -22,47 +22,60 @@ void gspSeven::resetDisplay()
     set_register(   MAX7219_REG_SHUTDOWN,   ON);   // turn off display
 }
 
-void gspSeven::displayNums(String inStr)  
+void gspSeven::displayNums(String &inStr)  
 {
     Serial.println(inStr);
     setDigitValue(   1,    0x0F);
-    setDigitValue(   2,    inStr.charAt(6));
-    setDigitValue(   3,    inStr.charAt(5));
-    setDigitValue(   4,    inStr.charAt(4));
-    setDigitValue(   5,    inStr.charAt(2) | DP); // plus decimal point
-    setDigitValue(   6,    inStr.charAt(1));
-    setDigitValue(   7,    inStr.charAt(0));
+    setDigitValue(   2,    getCharAt(inStr,6));
+    setDigitValue(   3,    getCharAt(inStr,5));
+    setDigitValue(   4,    getCharAt(inStr,4));
+    setDigitValue(   5,    getCharAt(inStr,2) | DP); // plus decimal point
+    setDigitValue(   6,    getCharAt(inStr,1));
+    setDigitValue(   7,    getCharAt(inStr,0));
     setDigitValue(   8,    0x0F);
 }
 
-void gspSeven::displayRtcDate(String inStr)  
+void gspSeven::displayRtcDate(String &inStr)  
 {
-    setDigitValue(   1,    inStr.charAt(7));
-    setDigitValue(   2,    inStr.charAt(6));
-    setDigitValue(   3,    inStr.charAt(5));
-    setDigitValue(   4,    inStr.charAt(4));
-    setDigitValue(   5,    inStr.charAt(3) | DP); // plus decimal point
-    setDigitValue(   6,    inStr.charAt(2));
-    setDigitValue(   7,    inStr.charAt(1) | DP);
-    setDigitValue(   8,    inStr.charAt(0));
+    setDigitValue(   1,    getCharAt(inStr,7));
+    setDigitValue(   2,    getCharAt(inStr,6));
+    setDigitValue(   3,    getCharAt(inStr,5));
+    setDigitValue(   4,    getCharAt(inStr,4));
+    setDigitValue(   5,    getCharAt(inStr,3) | DP); // plus decimal point
+    setDigitValue(   6,    getCharAt(inStr,2));
+    setDigitValue(   7,    getCharAt(inStr,1) | DP);
+    setDigitValue(   8,    getCharAt(inStr,0));
 }
 
-void gspSeven::displayRtcTime(String inStr)  
+void gspSeven::displayRtcTime(String &inStr)  
 {
-    setDigitValue(1,inStr.charAt(7));
-    setDigitValue(2,inStr.charAt(6));
+    setDigitValue(1,getCharAt(inStr,7));
+    setDigitValue(2,getCharAt(inStr,6));
     setDigitValue(3,0X0A);
-    setDigitValue(4,inStr.charAt(4));
-    setDigitValue(5,inStr.charAt(3)); // plus decimal point
+    setDigitValue(4,getCharAt(inStr,4));
+    setDigitValue(5,getCharAt(inStr,3)); // plus decimal point
     setDigitValue(6,0x0A);
-    setDigitValue(7,inStr.charAt(1));
-    setDigitValue(8,inStr.charAt(0));
+    setDigitValue(7,getCharAt(inStr,1));
+    setDigitValue(8,getCharAt(inStr,0));
 }
 
-void gspSeven::displayAllNums(String inStr)  
+
+char gspSeven::getCharAt(String& instr, uint8_t index) {
+    uint8_t len=instr.length();
+    if (index>len)
+        return 0x0F;
+    else
+    {
+        return instr.charAt(index);
+    }
+    
+
+}
+
+void gspSeven::displayAllNums(String &inStr)  
 {
     for (int l=1;l<9;l++) {
-        setDigitValue(l,inStr.charAt(9-l));        
+            setDigitValue(l,getCharAt(inStr,l));        
     }
 }
 

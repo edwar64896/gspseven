@@ -96,10 +96,10 @@ class gspSeven : public gspGrouped {
         void resetDisplay();
         void displayDigit(uint8_t unit, String inStr)  ;
 
-        void displayNums(String inStr);
-        void displayAllNums(String inStr);
-        void displayRtcTime(String inStr);
-        void displayRtcDate(String inStr);
+        void displayNums(String &inStr);
+        void displayAllNums(String &inStr);
+        void displayRtcTime(String &inStr);
+        void displayRtcDate(String &inStr);
         void setIntensity(uint8_t intensity);
 
         void setDigitValue(uint8_t digit, byte value) {
@@ -159,6 +159,8 @@ class gspSeven : public gspGrouped {
 
         byte _displayDigits[8]={0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F};
         bool _updateDigits[8]={true,true,true,true,true,true,true,true};
+
+        char getCharAt(String& instr, uint8_t index);
 
         void set_register(byte reg, byte value);
 
